@@ -5,6 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class TotalViewModel : ViewModel() {
+
+    private val _date = MutableLiveData<String>()
+    val date: LiveData<String> = _date
+
+
     private val _total = MutableLiveData<Int>(0)
     val total: LiveData<Int>
         get() = _total
@@ -15,7 +20,12 @@ class TotalViewModel : ViewModel() {
         return new
     }
 
-    fun setTotal(newTotal: Int) {
+    fun setTotal(newTotal: Int, newDate: String = "") {
         _total.postValue(newTotal)
+        if (newDate.isNotEmpty()) _date.postValue(newDate)
+    }
+
+    fun setDate(newDate: String) {
+        _date.postValue(newDate)
     }
 }

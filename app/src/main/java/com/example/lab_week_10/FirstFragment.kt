@@ -27,35 +27,27 @@ class FirstFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val viewModel = ViewModelProvider(requireActivity()).get(TotalViewModel::class.java)
-    val textTotal = view.findViewById<TextView>(R.id.text_total_first)
+        val textTotal = view.findViewById<TextView>(R.id.text_total_first)
+        val textDate = view.findViewById<TextView>(R.id.text_date_first)
 
-        // create an explicit Observer with generic type
-        val observer = Observer<Int?> { value ->
+        // Observe total and date LiveData from the shared ViewModel
+        viewModel.total.observe(viewLifecycleOwner, Observer<Int?> { value ->
             val v = value ?: 0
             textTotal.text = getString(R.string.text_total, v)
-        }
+        })
 
-        // attach observer
-        viewModel.total.observe(viewLifecycleOwner, observer)
-    }
-
-
-    private fun updateText(total: Int) {
-        // gunakan view?.findViewById dari fragment view untuk menghindari NPE
-        view?.findViewById<TextView>(R.id.text_total_first)?.text =
-            getString(R.string.text_total, total)
-    }
-
-    private fun prepareViewModel() {
-        val viewModel =
-            ViewModelProvider(requireActivity()).get(TotalViewModel::class.java)
-
-        // pakai Observer eksplisit supaya Kotlin tidak kebingungan
-        viewModel.total.observe(viewLifecycleOwner, Observer<Int?> { total ->
-            val safeTotal = total ?: 0
-            updateText(safeTotal)
+        viewModel.date.observe(viewLifecycleOwner, Observer<String?> { d ->
+            // For easier debugging, always show the date field.
+            // If date is empty, show a placeholder so it's clear the value is not set.
+            textDate.visibility = View.VISIBLE
+            if (d.isNullOrEmpty()) {
+                textDate.text = getString(R.string.text_last_updated, "(not set)")
+            } else {
+                textDate.text = getString(R.string.text_last_updated, d)
+            }
         })
     }
+
 
     companion object {
         @JvmStatic
