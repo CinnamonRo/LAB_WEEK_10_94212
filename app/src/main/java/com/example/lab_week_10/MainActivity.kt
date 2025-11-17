@@ -26,8 +26,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun prepareViewModel() {
-        // Set initial UI using current ViewModel value
-        updateText(viewModel.total)
+    // Set initial UI using current ViewModel value
+    updateText(viewModel.total.value ?: 0)
 
         // set button listener
         findViewById<Button>(R.id.button_increment).setOnClickListener {
